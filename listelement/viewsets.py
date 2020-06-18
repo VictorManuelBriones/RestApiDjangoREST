@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from .models import Element, Category, Type
 from .serializer import ElementSerializer, CategorySerializer, TypeSerializer
 
@@ -9,8 +11,20 @@ class ElementViewSet(viewsets.ModelViewSet):
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
-    serializer_class = ElementSerializer
+    serializer_class = CategorySerializer
+
+    def list(self, request):
+        queryset = Category.objects.all()
+        print(queryset)
+        serializer = CategorySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    '''def retrieve(self, request, pk=None):
+        queryset = Category.objects.all()
+        category = get_object_or_404(queryset, pk=pk)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)'''
 
 class TypeViewSet(viewsets.ModelViewSet):
     queryset = Type.objects.all()
-    serializer_class = ElementSerializer
+    serializer_class = TypeSerializer
